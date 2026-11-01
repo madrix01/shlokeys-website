@@ -33,7 +33,7 @@ a { color: inherit; }
   align-items: center;
   padding: 1.25rem;
 }
-.top h1 { grid-column: 2; text-align: center; }
+.id { grid-column: 2; text-align: center; }
 
 .logo {
   grid-column: 1;
@@ -55,6 +55,25 @@ a { color: inherit; }
   line-height: 1;
   text-transform: lowercase;
 }
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+}
+.contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--dim);
+  transition: color 0.15s;
+}
+.contact a:hover, .contact a:focus-visible { color: var(--fg); }
+.contact svg { width: 20px; height: 20px; flex: none; }
 
 /* music */
 main {
@@ -91,8 +110,6 @@ main {
   margin-bottom: 0.75rem;
 }
 
-.soon { color: var(--dim); }
-
 .links { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
 .links a {
   display: inline-flex;
@@ -115,26 +132,16 @@ main {
 
 footer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  justify-content: center;
   padding: 2rem 1rem 3rem;
   color: var(--dim);
   border-top: 1px solid var(--line);
 }
-.contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 1.5rem; }
-.contact a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  text-decoration: none;
-  color: var(--fg);
-}
-.contact a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.contact svg { width: 22px; height: 22px; flex: none; }
 
 @media (max-width: 520px) {
-  .top { padding: 0.9rem; }
+  .top { padding: 0.9rem; grid-template-columns: auto 1fr; gap: 0 1rem; align-items: start; }
+  .id { grid-column: 2; text-align: left; }
+  .contact { justify-content: flex-start; }
   .song { grid-template-columns: 72px 1fr; gap: 1rem; }
   .cover { width: 72px; height: 72px; }
   .glitch { font-size: 1.9rem; }
