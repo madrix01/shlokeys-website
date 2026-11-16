@@ -45,11 +45,13 @@ a { color: inherit; }
   font-family: ui-monospace, Menlo, Consolas, monospace;
   white-space: pre;
   line-height: 1;
+  font-size: 10px; /* drawn big, shrunk with --s: phones inflate tiny font sizes */
+  transform-origin: 0 0;
   animation: float linear infinite;
 }
 @keyframes float {
-  from { transform: translate(-100%, 0); }
-  to { transform: translate(100vw, var(--sway)) rotate(15deg); }
+  from { transform: translate(-100%, 0) scale(var(--s)); }
+  to { transform: translate(100vw, var(--sway)) rotate(15deg) scale(var(--s)); }
 }
 
 /* header */
