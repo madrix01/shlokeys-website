@@ -6,6 +6,10 @@
   <title>shlokeys</title>
   <meta name="description" content="shlokeys. Music.">
   <link rel="icon" href="logo.svg">
+  <script>
+    try { var t = localStorage.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { var t = 'light'; }
+    document.documentElement.dataset.theme = t;
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap" rel="stylesheet">
@@ -44,6 +48,7 @@
   </svg>
 
   <header class="top" id="top">
+    <button class="theme" type="button" aria-label="Toggle dark mode"></button>
     <a class="logo" href="#top" aria-label="shlokeys">
       <img src="logo.svg" alt="shlokeys logo" width="362" height="319">
     </a>
@@ -59,6 +64,13 @@
   </header>
 
   <main>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#discography" class="tab-disco">discography</a>
+      <a href="#shows" class="tab-shows">shows</a>
+      <a href="#blog" class="tab-blog">blog</a>
+    </nav>
+
+    <section id="discography" class="panel">
     <article class="song latest">
       <img class="cover" src="covers/autumn-disco.webp" alt="Autumn Disco cover" loading="lazy" width="600" height="600" decoding="async">
       <div class="info">
@@ -133,11 +145,92 @@
         </nav>
       </div>
     </article>
+    </section>
+
+    <section id="shows" class="panel">
+      <p class="empty">no upcoming shows.</p>
+    </section>
+
+    <section id="blog" class="panel">
+      <p class="empty">no posts yet.</p>
+    </section>
   </main>
 
   <footer>
     <span>&copy; 2026 shlokeys</span>
   </footer>
 
+  <div class="notes" aria-hidden="true"></div>
+  <script>
+    // ponytail: random once at load, no respawn; add if it gets boring
+    document.querySelector('.theme').onclick = () => {
+      const r = document.documentElement, t = r.dataset.theme === 'dark' ? 'light' : 'dark';
+      r.dataset.theme = t;
+      try { localStorage.theme = t; } catch (e) {}
+    };
+    const notes = document.querySelector('.notes');
+    const pick = s => s[Math.floor(Math.random() * s.length)];
+    const LOGO = `                 *%+
+            +88008800088%+
+          %8880%000000808880*
+        0000+           +08080
+       %08*                008*
+      +080                  808*
+      000*                  *800
+      088+                   888%
+      8000                   8800
+      0800                  0080
+       080+                0008
+       +080               8800
+        0000            %8800
+         0008         080000
+          +888+     %08080*
+            80080%808008*
+             8808008080                   +++
+            +00008088800%%000%%08888808808%0*
+         *0880800*+%888880880080800%++
+       *888888+         **+
+      08080+
+     000+
+`;
+    // draws a note on a char grid; kind: 0 eighth, 1 quarter, 2 beamed pair
+    function note(kind) {
+      const W = 34, H = 34, g = Array.from({ length: H }, () => Array(W).fill(' '));
+      const put = (x, y, c) => { x = Math.round(x); y = Math.round(y); if (g[y] && x >= 0 && x < W) g[y][x] = c; };
+      const head = (cx, cy) => {
+        const th = -0.35, c = Math.cos(th), s = Math.sin(th);
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+          const dx = (x - cx) * 0.6, dy = y - cy;
+          const d = ((dx * c + dy * s) / 4.4) ** 2 + ((-dx * s + dy * c) / 2.9) ** 2;
+          if (d <= 1) put(x, y, d > 0.7 ? pick('*+8') : pick('8880'));
+        }
+      };
+      const stem = (x, y0, y1) => { for (let y = y0; y <= y1; y++) { put(x, y, y % 2 ? '0' : '8'); put(x + 1, y, y % 2 ? '8' : '0'); } };
+      if (kind === 2) {
+        head(6, 29); head(22, 29); stem(12, 3, 28); stem(28, 3, 28);
+        for (let y = 3; y <= 5; y++) for (let x = 12; x <= 29; x++) put(x, y, pick('8808%'));
+      } else {
+        head(7, 29); stem(13, 3, 28);
+        if (kind === 0) for (let i = 0; i <= 22; i++) {
+          const t = i / 22, w = Math.round(4 * (1 - t)) + 1;
+          for (let k = 0; k < w; k++) put(15 + 9 * Math.sin(t * Math.PI / 2) + k, 3 + 20 * t, pick('0%8'));
+        }
+      }
+      return g.map(r => r.join('')).join('\n');
+    }
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      for (let i = 0; i < 50; i++) {
+        const n = document.createElement('span');
+        n.textContent = note(Math.floor(Math.random() * 3));
+        n.style.cssText = `top:${Math.random() * 90}%;color:hsl(0 0% ${20 + Math.random() * 60}%);font-size:${1.2 + Math.random() * 1.3}px;` +
+          `animation-duration:${90 + Math.random() * 90}s;animation-delay:-${Math.random() * 150}s;--sway:${Math.random() * 200 - 100}px`;
+        notes.append(n);
+      }
+      const logo = document.createElement('span');
+      logo.textContent = LOGO;
+      logo.style.cssText = `top:35%;color:hsl(0 0% 72%);font-size:3.5px;animation-duration:150s;animation-delay:-40s;--sway:-60px`;
+      notes.append(logo);
+    }
+  </script>
 </body>
 </html>
